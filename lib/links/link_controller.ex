@@ -10,7 +10,7 @@ defmodule Urlner.LinkController do
     #   end
     conn
     |> put_resp_content_type("application/json")
-    |> send_resp(200, Poison.encode!(%{resp: "response"}))
+    |> send_resp(200, Jason.encode!(%{resp: "response"}))
   end
 
 end
