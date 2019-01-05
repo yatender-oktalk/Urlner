@@ -1,13 +1,13 @@
-defmodule Urlner.LinkRouter do
+defmodule Urlner.Link.Router do
   @moduledoc """
   module to route the Link related requestes
   """
   use UrlnerWeb, :router
-  alias Urlner.{
-    LinkController
+  alias Urlner.Link.{
+    Controller
   }
 
-  get "/", LinkController, :index
+  get "/", Controller, :index
   # get "/:link", LinkController, :get_link_details
   # post "/", LinkController, :create
   # post "/:link/validate", LinkController, :validate_link
