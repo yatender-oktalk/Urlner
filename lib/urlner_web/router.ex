@@ -7,6 +7,6 @@ defmodule Urlner.Router do
 
   scope "/api", Urlner do
     pipe_through :api
-    forward "/link", LinkRouter
+    forward "/link", Link.Router
   end
 end
