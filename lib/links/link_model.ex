@@ -9,6 +9,10 @@ defmodule Urlner.Link.Model do
     Model
   }
 
+  #macros to generate function which will be called dynamically.
+  require Urlner.LinkMacros
+  Urlner.LinkMacros.generate_dao([:code, :url])
+
   @primary_key {:id, :id, autogenerate: true}
   schema "links" do
     field :code, :string
@@ -19,23 +23,35 @@ defmodule Urlner.Link.Model do
     timestamps()
   end
 
-  def get_code(code) do
-    query =
-      from u in Model,
-      where: u.code == ^code and u.is_active == true and u.expire_time > ^Timex.now(),
-      select: u
+  # def get_code_2(val) do
+  #   query =
+  #     from u in Model,
+  #     where: u.code == ^val and u.is_active == true and u.expire_time > ^Timex.now(),
+  #     select: u
 
-    query
-    |> Repo.one()
-    |> send_resp()
-  end
+    # execute_one(query)
+  # end
 
+  # def get_url(val) do
+  #   query =
+  #     from u in Model,
+  #     where: u.url == ^val and u.is_active == true and u.expire_time > ^Timex.now(),
+  #     select: u
 
+  #   execute_one(query)
+  # end
 
-  defp send_resp(resp) do
+  defp execute_one(query) do
+    resp =
+      query
+      |> Repo.one()
+
     case resp do
-      nil -> {:error, nil}
-      _ -> {:ok, resp}
+      nil ->
+        {:error, nil}
+      _ ->
+        {:ok, resp}
     end
   end
+
 end
