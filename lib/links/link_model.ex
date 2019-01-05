@@ -41,6 +41,15 @@ defmodule Urlner.Link.Model do
   #   execute_one(query)
   # end
 
+  #TODO
+  def update_uid(row, uid) do
+    #create changeset and update
+  end
+
+  def insert_link(link, code, uid) do
+    #changeset and insert link with code
+  end
+
   defp execute_one(query) do
     resp =
       query
