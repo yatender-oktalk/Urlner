@@ -42,6 +42,7 @@ defmodule Urlner.Link.Helpers do
       _ ->
         [original_link , "uid=<%"<> uid] = String.split(url,"?")
         {original_link, uid |> String.replace("%>", "")}
+
         # regex can also be used but for simplicity let's use string replace
         # [_, uid] = String.split(url,"?")
         # regex = ~r/uid=<%(?<uid>.+)%(?>.+)/
