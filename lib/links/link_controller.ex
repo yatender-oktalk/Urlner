@@ -4,8 +4,12 @@ defmodule Urlner.Link.Controller do
   alias Urlner.Link.{
     Helpers
   }
+  alias Urlner.Analytics
+  alias Urlner.Analytics.Model.Postgres, as: Analytics
 
   def index(conn, params) do
+    headers = Enum.into(conn.req_headers, %{})
+    spawn(fn -> Analytics.insert_item(headers, params) end)
     conn |> send_resp(Helpers.get_link(params["url"]))
   end
 
@@ -22,6 +26,6 @@ defmodule Urlner.Link.Controller do
 
     conn
     |> put_resp_content_type("application/json")
-    |> send_resp(200, Jason.encode!(%{resp: response}))
+    |> send_resp(status, Jason.encode!(%{resp: response}))
   end
 end
