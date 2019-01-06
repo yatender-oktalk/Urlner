@@ -6,27 +6,27 @@ defmodule Urlner.Link.Helpers do
   @base_url "https://goo.gl/"
   # @link "http://example.com/about/index.html?uid=token"
 
-  def get_link(link) do
-    {:ok, create_link(link)}
+  def create_link(link) do
+    {:ok, handle_create(link)}
   end
 
-  def create_link(link) do
+  def handle_create(link) do
     {url, uid} = extract_url_uid(link)
     code_task = Task.async(fn -> get_uniq_code() end)
     url_existing_code = Model.get_url_uid({url, uid})
 
     code =
       case url_existing_code do
-        nil ->
+        {:error, nil} ->
           code = Task.await(code_task)
           spawn(fn -> handle_insert(url, code, uid) end)
           code
 
         # for those whose url doesn't exists
-        _ ->
+        {:ok, existing_code} ->
           # shutdown the uniqe code task as code not required anymore
           Task.shutdown(code_task)
-          url_existing_code
+          existing_code
       end
 
     code |> get_uniq_link
@@ -41,7 +41,8 @@ defmodule Urlner.Link.Helpers do
   end
 
   def get_uniq_code() do
-    case code = get_code() |> code_uniq?() do
+    code = get_code()
+    case  code |> code_uniq?() do
       true ->
         code
       false ->
@@ -49,10 +50,10 @@ defmodule Urlner.Link.Helpers do
     end
   end
 
-  defp code_uniq?(code) do
+  def code_uniq?(code) do
     case code |> Model.get_code() do
-      {:error, _} -> false
-      _ -> true
+      {:error, _} -> true
+      _ -> false
     end
   end
 
@@ -68,17 +69,19 @@ defmodule Urlner.Link.Helpers do
     end
   end
 
-  def get_original_link(short_url) do
+  def get_link(short_url) do
     with {code, key, val} <-  parse_short_url(short_url),
       {:ok, resp} <- Model.get_code(code) do
-        base_url = resp[:url]
+        base_url = resp.url
 
         uid =
           case {key, val} do
+            {"token", ""} ->
+              resp.uid
             {"token", val} ->
-              val
+                val
             _ ->
-              resp[:uid]
+              resp.uid
           end
         {:ok, generate_original_url(uid, base_url)}
     else
@@ -100,7 +103,9 @@ defmodule Urlner.Link.Helpers do
 
   def parse_short_url(url) do
     param_url = String.replace(url, @base_url, "")
-    case String.contains?(url, "?") == true do
+    case String.contains?(url, "?") == true and
+    String.contains?(url, "=") == true
+     do
       false ->
         {param_url, nil, nil}
       _ ->

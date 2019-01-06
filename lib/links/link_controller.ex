@@ -6,7 +6,11 @@ defmodule Urlner.Link.Controller do
   }
 
   def index(conn, params) do
-    conn |> send_resp(Helpers.get_link(params))
+    conn |> send_resp(Helpers.get_link(params["url"]))
+  end
+
+  def create(conn, params) do
+    conn |> send_resp(Helpers.create_link(params["url"]))
   end
 
   defp send_resp(conn, res) do
