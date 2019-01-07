@@ -1,6 +1,6 @@
 defmodule Urlner.Link.Model do
   use Urlner, :model
-
+  Application.ensure_all_started(:timex)
   alias Urlner.{
     Repo
   }

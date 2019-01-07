@@ -14,16 +14,19 @@ defmodule Urlner.Link.Controller do
   end
 
   def create(conn, params) do
+    IO.inspect("device, item, opts")
     conn |> send_resp(Helpers.create_link(params["url"]))
   end
 
   defp send_resp(conn, res) do
     {status, response} =
       case res do
-        {:ok, resp} -> {200, resp}
+        {:ok, resp} ->
+
+          {200, resp}
         {:error, resp} -> {400, resp}
       end
-
+      IO.inspect(response)
     conn
     |> put_resp_content_type("application/json")
     |> send_resp(status, Jason.encode!(%{resp: response}))

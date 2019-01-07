@@ -1,5 +1,6 @@
 defmodule Urlner.Repo.Migrations.Links do
   use Ecto.Migration
+  Application.ensure_all_started(:timex)
 
   def up do
     create table(:links) do

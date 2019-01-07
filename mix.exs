@@ -20,7 +20,7 @@ defmodule Urlner.Mixfile do
   def application do
     [
       mod: {Urlner.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :tzdata, :httpoison]
     ]
   end
 
@@ -42,7 +42,9 @@ defmodule Urlner.Mixfile do
       {:plug_cowboy, "~> 1.0"},
       {:jason, "~> 1.1"},
       {:timex_ecto, "~> 3.0"},
-      {:timex, "~> 3.1"}
+      {:tesla, "~> 1.2.0"},
+      {:hackney, "~> 1.14.0"},
+      {:httpoison, "~> 1.4"}
     ]
   end
 
@@ -56,7 +58,7 @@ defmodule Urlner.Mixfile do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      "test": ["ecto.create --quiet", "ecto.migrate", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end
