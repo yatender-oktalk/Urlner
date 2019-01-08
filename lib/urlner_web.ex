@@ -26,20 +26,20 @@ defmodule UrlnerWeb do
     end
   end
 
-  # def view do
-  #   quote do
-  #     use Phoenix.View,
-  #       root: "lib/urlner_web/templates",
-  #       namespace: UrlnerWeb
+  def view do
+    quote do
+      use Phoenix.View,
+        root: "lib/urlner_web/templates",
+        namespace: UrlnerWeb
 
-  #     # Import convenience functions from controllers
-  #     import Phoenix.Controller, only: [get_flash: 2, view_module: 1]
+      # Import convenience functions from controllers
+      import Phoenix.Controller, only: [get_flash: 2, view_module: 1]
 
-  #     import UrlnerWeb.Router.Helpers
-  #     import UrlnerWeb.ErrorHelpers
-  #     import UrlnerWeb.Gettext
-  #   end
-  # end
+      import UrlnerWeb.Router.Helpers
+      import UrlnerWeb.ErrorHelpers
+      import UrlnerWeb.Gettext
+    end
+  end
 
   def router do
     quote do
@@ -49,12 +49,12 @@ defmodule UrlnerWeb do
     end
   end
 
-  # def channel do
-  #   quote do
-  #     use Phoenix.Channel
-  #     import UrlnerWeb.Gettext
-  #   end
-  # end
+  def channel do
+    quote do
+      use Phoenix.Channel
+      import UrlnerWeb.Gettext
+    end
+  end
 
   @doc """
   When used, dispatch to the appropriate controller/view/etc.

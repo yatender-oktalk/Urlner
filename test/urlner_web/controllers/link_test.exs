@@ -1,6 +1,5 @@
 defmodule Urlner.Link.Test do
-  use ExUnit.Case
-
+  use ExUnit.Case, async: true
   alias Urlner.Link.{Helpers}
 
     test "generate short url without params & get original url" do
@@ -21,7 +20,7 @@ defmodule Urlner.Link.Test do
     end
 
     test "invalid short url passing" do
-      original_url = "https://golang.org/src/sort/example_test.go?uid=890789"
+      original_url = "https://getvokal.com"
 
       {:ok, _response} = Helpers.create_link(original_url)
       {:error, fake_link_response} = Helpers.get_link("http://random.invalid.url")
