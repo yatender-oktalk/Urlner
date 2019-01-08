@@ -11,22 +11,26 @@ defmodule Urlner.Link.Helpers do
   end
 
   def handle_create(link) do
-    {url, uid} = extract_url_uid(link)
+    # {url, uid} = extract_url_uid(link)
     code_task = Task.async(fn -> get_uniq_code() end)
-    url_existing_code = Model.get_url_uid({url, uid})
+    hash_resp = Model.get_hash(generate_hash(link))
 
     code =
-      case url_existing_code do
+      case hash_resp do
         {:error, nil} ->
           code = Task.await(code_task)
-          spawn(fn -> handle_insert(url, code, uid) end)
+          spawn(fn ->
+            hash = generate_hash(link)
+            handle_insert(link, code, hash)
+          end)
+
           code
 
         # for those whose url doesn't exists
-        {:ok, existing_code} ->
+        {:ok, row} ->
           # shutdown the uniqe code task as code not required anymore
           Task.shutdown(code_task)
-          existing_code
+          row.code
       end
 
     code |> get_uniq_link
@@ -69,21 +73,25 @@ defmodule Urlner.Link.Helpers do
     end
   end
 
+  @doc """
+  this def will give the original url from short url
+  """
   def get_link(short_url) do
-    with {code, key, val} <-  parse_short_url(short_url),
+    with {code, key, val} <-  parse_url(short_url),
       {:ok, resp} <- Model.get_code(code) do
-        base_url = resp.url
+      {original_link, _, original_val} = parse_url(resp.url)
 
         uid =
           case {key, val} do
             {"token", ""} ->
-              resp.uid
+              original_val
             {"token", val} ->
                 val
             _ ->
-              resp.uid
+              original_val
+
           end
-        {:ok, generate_original_url(uid, base_url)}
+        {:ok, generate_original_url(uid, original_link)}
     else
       {:error, _} ->
         {:error, "invalid or expired link"}
@@ -98,7 +106,7 @@ defmodule Urlner.Link.Helpers do
     "#{base_url}?uid=#{uid}"
   end
 
-  def parse_short_url(url) do
+  def parse_url(url) do
     param_url = String.replace(url, @base_url, "")
     case String.contains?(url, "?") == true and
     String.contains?(url, "=") == true
@@ -110,6 +118,11 @@ defmodule Urlner.Link.Helpers do
         [key, val] = String.split(param, "=")
         {code, key, val}
     end
+  end
+
+  def generate_hash(str) do
+    :crypto.hash(:sha256, str)
+    |> Base.encode16()
   end
 
   defp get_code(), do: Base.encode64(Ecto.UUID.generate() |> binary_part(0, 8), padding: false)

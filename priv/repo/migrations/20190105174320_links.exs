@@ -6,12 +6,12 @@ defmodule Urlner.Repo.Migrations.Links do
     create table(:links) do
       add :code, :string
       add :url, :string
-      add :uid, :string, default: ""
+      add :hash, :string, default: ""
       add :is_active, :boolean
       add :expire_time, :naive_datetime
       timestamps()
     end
-    create unique_index(:links, [ :code])
+    create unique_index(:links, [:code, :hash])
   end
 
   def down do
