@@ -6,6 +6,9 @@ defmodule Urlner.Link.Helpers do
   @base_url "https://goo.gl/"
   # @link "http://example.com/about/index.html?uid=token"
 
+  @doc """
+  this method will create short url
+  """
   def create_link(link) do
     {:ok, handle_create(link)}
   end
