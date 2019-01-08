@@ -13,7 +13,7 @@ defmodule Urlner.Network.Provider.Poison do
     case HTTPoison.post(
       @baseurl <> path,
       Jason.encode!(body),
-      headers = ["Content-Type": "application/json"]
+      ["Content-Type": "application/json"]
     ) do
       {:ok, response} ->
         Jason.decode!(response.body)

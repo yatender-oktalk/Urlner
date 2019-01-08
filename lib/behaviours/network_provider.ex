@@ -4,7 +4,7 @@ defmodule Urlner.Behaviours.NetworkProvider do
   @type reason :: atom()
   @type response :: binary()
 
-  @callback get(path) :: {:ok, response} | {:error, reason}
+  @callback get(path) :: {:ok, response} | {:error, reason} 
 
   @callback post(path, body) :: {:ok, response} | {:error, reason}
 

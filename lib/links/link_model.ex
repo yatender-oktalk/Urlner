@@ -17,7 +17,7 @@ defmodule Urlner.Link.Model do
   schema "links" do
     field(:code, :string)
     field(:url, :string)
-    field(:uid, :string, default: nil)
+    field(:uid, :string, default: "")
     field(:is_active, :boolean, default: true)
     field(:expire_time, Timex.Ecto.DateTime, default: Timex.shift(Timex.now(), days: @default_active_days))
     timestamps()
@@ -30,11 +30,15 @@ defmodule Urlner.Link.Model do
   #   }}
   # end
 
-  def get_url_uid({url, _uid}) do
+  def get_url_uid({url, uid}) do
+    n_uid = case is_nil(uid) do
+      true -> ""
+      _ -> uid
+    end
     query =
       from(u in Model,
         where:
-          u.url == ^url and u.is_active == true and u.expire_time > ^Timex.now(),
+          u.url == ^url and u.uid == ^n_uid and u.is_active == true and u.expire_time > ^Timex.now(),
         select: u.code
       )
 
@@ -47,7 +51,7 @@ defmodule Urlner.Link.Model do
       %{
         code: code,
         url: url,
-        uid: uid
+        uid: uid || ""
       }
     ) |> Repo.insert()
   end

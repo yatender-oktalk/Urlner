@@ -90,15 +90,12 @@ defmodule Urlner.Link.Helpers do
     end
   end
 
+  def generate_original_url(uid, base_url) when uid in [nil, ""] do
+    base_url
+  end
+
   def generate_original_url(uid, base_url) do
-    case uid do
-      nil ->
-        "#{base_url}"
-      "" ->
-        "#{base_url}"
-      _ ->
-        "#{base_url}?uid=#{uid}"
-    end
+    "#{base_url}?uid=#{uid}"
   end
 
   def parse_short_url(url) do

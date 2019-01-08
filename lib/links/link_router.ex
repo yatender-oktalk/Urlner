@@ -9,9 +9,8 @@ defmodule Urlner.Link.Router do
   }
 
   # post("/", Controller, :create)
-  post("/original", Controller, :index)
   post("/", Controller, :create)
-  # post "/:link/validate", LinkController, :validate_link
+  post("/original", Controller, :index)
   # put "/:id", LinkController, :activate_link
   # delete "/:id", LinkController, :deactivate_link
 end
