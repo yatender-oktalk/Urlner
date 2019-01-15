@@ -15,7 +15,7 @@ config :urlner, Urlner.Repo,
   username: "ok",
   password: "maxx",
   database: "urlner_test",
-  hostname: "localhost",
+  hostname: "yatender-new.c0nszyhy2spc.us-east-2.rds.amazonaws.com",
   ownership_timeout: 60_000,
   pool_timeout: 60_000,
   pool: Ecto.Adapters.SQL.Sandbox

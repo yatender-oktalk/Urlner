@@ -8,7 +8,7 @@ defmodule Urlner.Link.Router do
     Controller
   }
 
-  # post("/", Controller, :create)
+  get("/health", Controller, :health)
   post("/", Controller, :create)
   post("/original", Controller, :index)
   # put "/:id", LinkController, :activate_link

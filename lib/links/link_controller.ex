@@ -17,6 +17,10 @@ defmodule Urlner.Link.Controller do
     conn |> send_resp(Helpers.create_link(params["url"]))
   end
 
+  def health(conn, params) do
+    send_resp(conn, {:ok, "health is fine"})
+  end
+
   defp send_resp(conn, res) do
     {status, response} =
       case res do
